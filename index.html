@@ -1,0 +1,2731 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StackCraftr - IT решения нового поколения</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --secondary: #1e293b;
+      --accent: #ff6600;
+      --accent-light: #ff8c42;
+      --text: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      --gradient: linear-gradient(135deg, #ff6600, #ff3300);
+      --glass: rgba(30, 41, 59, 0.25);
+      --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+    
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: linear-gradient(135deg, #0b1120, #0f172a, #0d1426);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+    
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 102, 0, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 70%, rgba(255, 102, 0, 0.15) 0%, transparent 20%),
+        linear-gradient(45deg, rgba(15, 23, 42, 0.9), rgba(11, 17, 32, 0.9));
+      z-index: -1;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+    
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      letter-spacing: -0.03em;
+      background: linear-gradient(45deg, #ff8c42, #ff6600, #ff3300);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientShift 8s infinite alternate;
+    }
+    
+    h2 {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      position: relative;
+      display: inline-block;
+      margin-bottom: clamp(30px, 4vw, 50px);
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 0;
+      width: 80px;
+      height: 5px;
+      background: var(--accent);
+      border-radius: 10px;
+      animation: lineExtend 1.2s ease-out forwards;
+    }
+    
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+    }
+    
+    .container { 
+      width: min(90%, 1200px); 
+      margin: 0 auto; 
+      padding: clamp(50px, 6vw, 80px) 0; 
+      position: relative;
+      z-index: 2;
+    }
+    
+    .btn {
+      background: var(--gradient);
+      color: white;
+      padding: clamp(12px, 2vw, 16px) clamp(20px, 3vw, 32px);
+      border: none;
+      border-radius: 12px;
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(135deg, #ff3300, #ff6600);
+      z-index: -1;
+      transition: width 0.5s ease;
+    }
+    
+    .btn:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(255, 102, 0, 0.4);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      box-shadow: none;
+    }
+    
+    .btn-outline:hover {
+      background: var(--accent);
+      color: white;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px) scale(0.95); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes lineExtend {
+      0% { width: 0; }
+      100% { width: 80px; }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes wave {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(-25%); }
+      100% { transform: translateX(-50%); }
+    }
+    
+    @keyframes modalAppear {
+      from { 
+        opacity: 0; 
+        transform: translateY(100px) scale(0.8); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
+    }
+    
+    @keyframes slideInLeft {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .animate {
+      animation: fadeInUp 0.8s var(--ease-out) forwards;
+    }
+    
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(12px, 2vw, 20px) clamp(15px, 3vw, 50px);
+      z-index: 1000;
+      transition: var(--transition);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .navbar.scrolled {
+      padding: 10px clamp(15px, 3vw, 50px);
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(20px, 4vw, 28px);
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+    }
+    
+    .logo span {
+      color: var(--accent);
+      transition: var(--transition);
+    }
+    
+    .logo:hover span {
+      color: var(--accent-light);
+    }
+    
+    .logo-icon {
+      animation: rotate 8s infinite linear;
+    }
+    
+    .menu {
+      display: flex;
+      gap: clamp(15px, 2vw, 30px);
+    }
+    
+    .menu a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      transition: var(--transition);
+      position: relative;
+      padding: 5px 0;
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+    }
+    
+    .menu a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: var(--transition);
+    }
+    
+    .menu a:hover {
+      color: white;
+    }
+    
+    .menu a:hover::after {
+      width: 100%;
+    }
+    
+    .menu-icon {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 1001;
+      color: var(--text);
+      transition: var(--transition);
+    }
+    
+    .menu-icon:hover {
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+    
+    header {
+      padding: clamp(100px, 15vh, 180px) 0 clamp(80px, 10vh, 120px);
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-content {
+      text-align: center;
+      max-width: min(90%, 800px);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .header-content h1 {
+      animation: fadeInUp 0.8s ease forwards;
+      opacity: 0;
+      animation-delay: 0.2s;
+    }
+    
+    .header-content p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      max-width: min(90%, 600px);
+      margin: 0 auto clamp(25px, 3vw, 40px);
+      animation: fadeInUp 0.8s ease forwards;
+      opacity: 0;
+      animation-delay: 0.4s;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: clamp(10px, 2vw, 20px);
+      flex-wrap: wrap;
+      animation: fadeInUp 0.8s ease forwards;
+      opacity: 0;
+      animation-delay: 0.6s;
+    }
+    
+    .hero-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.3;
+      animation: float 6s infinite ease-in-out;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: clamp(20px, 3vw, 30px);
+      margin-top: clamp(20px, 3vw, 40px);
+    }
+    
+    .card {
+      background: var(--card-bg);
+      padding: clamp(25px, 3vw, 40px) clamp(20px, 2vw, 30px);
+      border-radius: 20px;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      transform: translateY(30px) rotateY(5deg);
+      perspective: 1000px;
+    }
+    
+    .card.show {
+      opacity: 1;
+      transform: translateY(0) rotateY(0);
+    }
+    
+    .card:hover {
+      transform: translateY(-10px) rotateY(0) scale(1.02);
+      border-color: rgba(255, 102, 0, 0.3);
+      background: rgba(30, 41, 59, 0.6);
+    }
+    
+    .card i {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(50px, 8vw, 70px);
+      height: clamp(50px, 8vw, 70px);
+      margin: 0 auto clamp(15px, 2vw, 25px);
+      background: rgba(255, 102, 0, 0.1);
+      border-radius: 18px;
+      font-size: clamp(24px, 4vw, 32px);
+      color: var(--accent);
+      transition: var(--transition);
+    }
+    
+    .card:hover i {
+      background: var(--accent);
+      color: white;
+      transform: scale(1.1) rotateY(15deg);
+    }
+    
+    .card h3 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      margin-bottom: 15px;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: clamp(40px, 6vw, 80px) 0;
+      text-align: center;
+      gap: clamp(10px, 2vw, 20px);
+    }
+    
+    .stat-item {
+      padding: clamp(20px, 3vw, 30px);
+      background: var(--card-bg);
+      border-radius: 20px;
+      min-width: min(160px, 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+      transition: var(--transition);
+    }
+    
+    .stat-item.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .stat-item:hover {
+      transform: translateY(-8px) scale(1.05);
+      background: rgba(30, 41, 59, 0.6);
+    }
+    
+    .stat-number {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: var(--transition);
+    }
+    
+    .stat-item:hover .stat-number {
+      color: var(--accent-light);
+    }
+    
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(30px, 4vw, 50px);
+      align-items: center;
+    }
+    
+    @media (min-width: 992px) {
+      .about-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .about-content h2 {
+      margin-bottom: 30px;
+    }
+    
+    .about-image {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transform: perspective(1000px) rotateY(-5deg);
+      transition: var(--transition);
+      opacity: 0;
+      transform: translateX(30px) rotate(-2deg);
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    
+    .about-image.show {
+      opacity: 1;
+      transform: translateX(0) perspective(1000px) rotateY(-5deg);
+    }
+    
+    .about-image:hover {
+      transform: perspective(1000px) rotateY(0deg) scale(1.02);
+    }
+    
+    .about-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255, 102, 0, 0.2), transparent);
+      z-index: 1;
+      transition: var(--transition);
+    }
+    
+    .about-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: var(--transition);
+      loading="lazy";
+    }
+    
+    .portfolio-filters {
+      display: flex;
+      justify-content: center;
+      gap: clamp(8px, 1.5vw, 15px);
+      margin-bottom: clamp(25px, 3vw, 40px);
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      background: transparent;
+      border: 2px solid var(--secondary);
+      color: var(--text-secondary);
+      padding: 8px clamp(12px, 2vw, 20px);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      transform: translateY(0);
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+    }
+    
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      transform: translateY(-5px) rotate(2deg);
+    }
+    
+    .filter-btn.active {
+      animation: pulse 1.5s infinite;
+    }
+    
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: clamp(20px, 3vw, 30px);
+      margin-top: 20px;
+    }
+    
+    .portfolio-item {
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      height: clamp(280px, 40vw, 350px);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: var(--transition);
+    }
+    
+    .portfolio-item.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .portfolio-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+      loading="lazy";
+    }
+    
+    .portfolio-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(15px, 3vw, 30px);
+      transform: translateY(100%);
+      transition: var(--transition);
+    }
+    
+    .portfolio-item:hover .portfolio-overlay {
+      transform: translateY(0);
+    }
+    
+    .portfolio-item:hover img {
+      transform: scale(1.05);
+    }
+    
+    .testimonials-slider {
+      position: relative;
+      margin-top: clamp(25px, 4vw, 40px);
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .testimonials-track {
+      display: flex;
+      transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    .testimonial-card {
+      background: var(--card-bg);
+      padding: clamp(25px, 4vw, 40px);
+      min-width: 100%;
+      border-radius: 20px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+    
+    .testimonial-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    .testimonial-card i {
+      position: absolute;
+      top: clamp(20px, 3vw, 30px);
+      right: clamp(20px, 3vw, 30px);
+      opacity: 0.2;
+      width: clamp(40px, 6vw, 60px);
+      height: clamp(40px, 6vw, 60px);
+      transition: var(--transition);
+    }
+    
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: clamp(20px, 3vw, 30px);
+    }
+    
+    .author-avatar {
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      transition: var(--transition);
+    }
+    
+    .slider-nav {
+      display: flex;
+      justify-content: center;
+      gap: clamp(8px, 1.5vw, 15px);
+      margin-top: clamp(20px, 3vw, 30px);
+    }
+    
+    .slider-dot {
+      width: clamp(10px, 1.5vw, 12px);
+      height: clamp(10px, 1.5vw, 12px);
+      border-radius: 50%;
+      background: var(--secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .slider-dot.active {
+      background: var(--accent);
+      transform: scale(1.2);
+    }
+    
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      background: var(--secondary);
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: clamp(30px, 5vw, 60px);
+      width: calc(50% - 40px);
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: var(--transition);
+    }
+    
+    .timeline-item.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .timeline-item:nth-child(odd) {
+      left: 0;
+    }
+    
+    .timeline-item:nth-child(even) {
+      left: calc(50% + 40px);
+    }
+    
+    .timeline-content {
+      background: var(--card-bg);
+      padding: clamp(20px, 3vw, 30px);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      transition: var(--transition);
+    }
+    
+    .timeline-content:hover {
+      transform: translateY(-8px) scale(1.02);
+      background: rgba(30, 41, 59, 0.6);
+    }
+    
+    .timeline-content::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content::before {
+      right: -50px;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-content::before {
+      left: -50px;
+    }
+    
+    .timeline-number {
+      position: absolute;
+      top: -20px;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-number {
+      right: -60px;
+    }
+    
+    .timeline-item:nth-child(even) .timeline-number {
+      left: -60px;
+    }
+    
+    .pricing-table {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: clamp(20px, 3vw, 30px);
+      margin-top: clamp(25px, 4vw, 40px);
+    }
+    
+    .price-card {
+      background: var(--card-bg);
+      padding: clamp(25px, 3vw, 40px) clamp(20px, 2vw, 30px);
+      border-radius: 20px;
+      flex: 1;
+      min-width: min(280px, 100%);
+      max-width: 350px;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(30px) rotateY(5deg);
+    }
+    
+    .price-card.show {
+      opacity: 1;
+      transform: translateY(0) rotateY(0);
+    }
+    
+    .price-card.featured {
+      border: 1px solid var(--accent);
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+    
+    .price-card.featured::before {
+      content: 'Рекомендуем';
+      position: absolute;
+      top: 15px;
+      right: -35px;
+      background: var(--accent);
+      color: white;
+      padding: 5px 40px;
+      transform: rotate(45deg);
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 1;
+      transition: var(--transition);
+    }
+    
+    .price-card:hover {
+      transform: translateY(-8px) rotateY(0) scale(1.02);
+      border-color: rgba(255, 102, 0, 0.3);
+    }
+    
+    .price-card h3 {
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      margin-bottom: 15px;
+    }
+    
+    .price-amount {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--accent);
+      margin: clamp(15px, 3vw, 20px) 0;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: var(--transition);
+    }
+    
+    .price-features {
+      list-style: none;
+      margin: clamp(20px, 3vw, 30px) 0;
+      text-align: left;
+      flex-grow: 1;
+    }
+    
+    .price-features li {
+      padding: clamp(8px, 1.5vw, 10px) 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+      font-size: clamp(0.9rem, 1.8vw, 1rem);
+    }
+    
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 1.5vw, 15px);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .faq-item {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+    
+    .faq-item.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .faq-item h3 {
+      padding: clamp(15px, 3vw, 20px);
+      margin: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      transition: var(--transition);
+    }
+    
+    .faq-item p {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      padding: 0 clamp(15px, 3vw, 20px);
+      margin: 0;
+    }
+    
+    .faq-item.active p {
+      max-height: 500px;
+      padding: 0 clamp(15px, 3vw, 20px) clamp(15px, 3vw, 20px);
+    }
+    
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(30px, 4vw, 50px);
+      align-items: center;
+    }
+    
+    @media (min-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(15px, 3vw, 25px);
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(10px, 2vw, 15px);
+      transition: var(--transition);
+    }
+    
+    .contact-item i {
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      background: rgba(255, 102, 0, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(20px, 4vw, 24px);
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(15px, 2vw, 20px);
+      background: var(--card-bg);
+      padding: clamp(25px, 4vw, 40px);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+    
+    .contact-form:hover {
+      transform: translateY(-8px) scale(1.01);
+    }
+    
+    .contact-form input,
+    .contact-form textarea {
+      padding: clamp(12px, 2vw, 16px) clamp(15px, 2vw, 20px);
+      border: 1px solid var(--secondary);
+      border-radius: 12px;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      width: 100%;
+      background: rgba(15, 23, 42, 0.5);
+      color: white;
+      transition: var(--transition);
+    }
+    
+    footer {
+      background: var(--primary);
+      text-align: center;
+      padding: clamp(50px, 8vw, 80px) 0 clamp(30px, 4vw, 40px);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+    
+    .wave-divider {
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      transform: rotate(180deg);
+    }
+    
+    .wave-divider svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: clamp(60px, 10vw, 120px);
+    }
+    
+    .wave-divider path {
+      animation: wave 30s linear infinite;
+    }
+    
+    .footer-content {
+      max-width: min(90%, 600px);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.6rem, 5vw, 2rem);
+      margin-bottom: clamp(15px, 2vw, 20px);
+      background: linear-gradient(45deg, #ff8c42, #ff6600);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: clamp(10px, 1.5vw, 15px);
+      justify-content: center;
+      margin: clamp(20px, 3vw, 30px) 0;
+    }
+    
+    .social-links a {
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      border-radius: 50%;
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      transition: var(--transition);
+    }
+    
+    .copyright {
+      margin-top: clamp(25px, 4vw, 40px);
+      padding-top: clamp(15px, 2vw, 20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+    }
+    
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100%; 
+      height: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.4s ease forwards;
+    }
+    
+    .modal-overlay.show {
+      display: flex;
+    }
+    
+    .modal {
+      background: var(--card-bg);
+      padding: clamp(15px, 3vw, 25px);
+      border-radius: 20px;
+      max-width: min(90%, 500px);
+      width: 90%;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      backdrop-filter: blur(20px);
+      transform: scale(0.9);
+      opacity: 0;
+      animation: modalAppear 0.5s var(--ease-out) forwards;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: clamp(10px, 2vw, 15px);
+      right: clamp(10px, 2vw, 15px);
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .compact-form {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1.5vw, 12px);
+    }
+    
+    .compact-form input,
+    .compact-form select,
+    .compact-form textarea {
+      padding: clamp(10px, 1.8vw, 12px) clamp(12px, 2vw, 15px);
+      border: 1px solid var(--secondary);
+      border-radius: 10px;
+      font-size: clamp(0.85rem, 2vw, 0.9rem);
+      background: rgba(15, 23, 42, 0.5);
+      color: white;
+      transition: var(--transition);
+    }
+    
+    .compact-form .btn {
+      padding: clamp(10px, 2vw, 12px) clamp(15px, 3vw, 20px);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      margin-top: 5px;
+    }
+    
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+      display: none;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    #scrollTop {
+      position: fixed;
+      bottom: clamp(15px, 3vw, 30px);
+      right: clamp(15px, 3vw, 30px);
+      width: clamp(45px, 7vw, 60px);
+      height: clamp(45px, 7vw, 60px);
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 1000;
+      box-shadow: var(--shadow);
+      border: none;
+      animation: pulse 2s infinite;
+    }
+    
+    #scrollTop.show {
+      opacity: 1;
+    }
+    
+    .language-selector {
+      position: fixed;
+      bottom: clamp(10px, 2vw, 20px);
+      left: clamp(10px, 2vw, 20px);
+      z-index: 1000;
+      font-family: 'Manrope', sans-serif;
+    }
+    
+    .selected-lang {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: clamp(6px, 1vw, 10px);
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+    }
+    
+    .lang-list {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      list-style: none;
+      padding: clamp(8px, 1.5vw, 10px) 0;
+      margin-bottom: clamp(6px, 1vw, 10px);
+      width: 100%;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: var(--transition);
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .lang-list.show {
+      transform: scaleY(1);
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .lang-option {
+      padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 15px);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: clamp(0.85rem, 2vw, 0.9rem);
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 992px) {
+      .timeline::before {
+        left: 30px;
+      }
+      
+      .timeline-item {
+        width: calc(100% - 80px);
+        left: 80px !important;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-content::before,
+      .timeline-item:nth-child(even) .timeline-content::before {
+        left: -50px;
+        right: auto;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-number,
+      .timeline-item:nth-child(even) .timeline-number {
+        left: -60px;
+        right: auto;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .menu {
+        display: none;
+        flex-direction: column;
+        background: var(--primary);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        padding: 80px 30px 30px;
+        gap: 25px;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+      }
+      
+      .menu.show {
+        transform: translateX(0);
+        display: flex;
+      }
+      
+      .menu-icon {
+        display: block;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+      }
+      
+      .price-card.featured {
+        transform: scale(1);
+      }
+      
+      .price-card.featured:hover {
+        transform: translateY(-8px);
+      }
+      
+      .menu.show a {
+        animation: slideInLeft 0.5s var(--ease-out) forwards;
+        opacity: 0;
+      }
+      
+      .menu.show a:nth-child(1) { animation-delay: 0.1s; }
+      .menu.show a:nth-child(2) { animation-delay: 0.2s; }
+      .menu.show a:nth-child(3) { animation-delay: 0.3s; }
+      .menu.show a:nth-child(4) { animation-delay: 0.4s; }
+      .menu.show a:nth-child(5) { animation-delay: 0.5s; }
+      .menu.show a:nth-child(6) { animation-delay: 0.6s; }
+      .menu.show a:nth-child(7) { animation-delay: 0.7s; }
+    }
+    
+    @media (max-width: 480px) {
+      .stats {
+        flex-direction: column;
+      }
+      
+      .pricing-table {
+        flex-direction: column;
+      }
+      
+      .stat-item {
+        min-width: 100%;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .container {
+        padding: 40px 0;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      h2 {
+        font-size: 1.6rem;
+      }
+      
+      .navbar {
+        padding: 10px 15px;
+      }
+      
+      .logo {
+        font-size: 18px;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+      
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .timeline-item {
+        width: calc(100% - 60px);
+        left: 60px !important;
+      }
+      
+      .timeline-content::before {
+        width: 15px;
+        height: 15px;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-content::before,
+      .timeline-item:nth-child(even) .timeline-content::before {
+        left: -40px;
+      }
+      
+      .timeline-number {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-number,
+      .timeline-item:nth-child(even) .timeline-number {
+        left: -50px;
+      }
+      
+      .contact-form {
+        padding: 20px;
+      }
+    }
+
+    /* Accessibility improvements */
+    .btn:focus, .filter-btn:focus, .menu-icon:focus, #scrollTop:focus {
+      outline: 2px solid var(--accent-light);
+      outline-offset: 2px;
+    }
+
+    .lang-option:focus, .slider-dot:focus {
+      outline: 2px solid var(--accent);
+    }
+
+    .faq-item h3:focus {
+      outline: 2px solid var(--accent-light);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Навигация -->
+  <nav class="navbar">
+    <a href="#" class="logo">
+      <i class="logo-icon" data-lucide="cpu"></i>
+      Stack<span>Craftr</span>
+    </a>
+    
+    <div class="menu-icon" id="menuToggle" aria-label="Меню">
+      <i data-lucide="menu"></i>
+    </div>
+    
+    <nav class="menu">
+      <a href="#benefits" data-i18n="nav.benefits">Преимущества</a>
+      <a href="#portfolio" data-i18n="nav.portfolio">Портфолио</a>
+      <a href="#testimonials" data-i18n="nav.testimonials">Отзывы</a>
+      <a href="#steps" data-i18n="nav.steps">Этапы</a>
+      <a href="#pricing" data-i18n="nav.pricing">Тарифы</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a href="#contact" data-i18n="nav.contact">Контакты</a>
+      <button class="btn" onclick="toggleModal()" data-i18n="nav.order">Заказать</button>
+    </nav>
+  </nav>
+  
+  <!-- Шапка -->
+  <header>
+    <div class="hero-particles" id="particles"></div>
+    
+    <div class="container">
+      <div class="header-content">
+        <h1 data-i18n="hero.title">IT-решения для успешного бизнеса</h1>
+        <p data-i18n="hero.subtitle">Ваш бизнес — наша платформа. Мы создаём сайты, чат-боты и приложения, которые двигают вперёд!</p>
+        <div class="hero-buttons">
+          <button class="btn" onclick="toggleModal()">
+            <span class="btn-text" data-i18n="hero.order">Оставить заявку</span>
+            <span class="loader"></span>
+          </button>
+          <button class="btn btn-outline" onclick="document.querySelector('#portfolio').scrollIntoView({behavior: 'smooth'})" data-i18n="hero.portfolio">Портфолио</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Преимущества -->
+  <section id="benefits" class="container">
+    <h2 data-i18n="benefits.title">Наши преимущества</h2>
+    <div class="grid-3">
+      <div class="card">
+        <i data-lucide="layout-dashboard"></i>
+        <h3 data-i18n="benefits.card1">Индивидуальный дизайн</h3>
+        <p data-i18n="benefits.card1_text">Каждый проект уникален и создаётся с нуля под ваши требования</p>
+      </div>
+      <div class="card">
+        <i data-lucide="zap"></i>
+        <h3 data-i18n="benefits.card2">Быстрое выполнение</h3>
+        <p data-i18n="benefits.card2_text">Оперативная разработка без потери качества</p>
+      </div>
+      <div class="card">
+        <i data-lucide="smartphone"></i>
+        <h3 data-i18n="benefits.card3">Адаптивность</h3>
+        <p data-i18n="benefits.card3_text">Идеальное отображение на любых устройствах</p>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number" data-count="120">0</div>
+        <div data-i18n="benefits.stats1">Завершенных проектов</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-count="98">0</div>
+        <div data-i18n="benefits.stats2">Довольных клиентов</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-count="24">0</div>
+        <div data-i18n="benefits.stats3">Поддержка 24/7</div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- О нас -->
+  <section id="about" class="container">
+    <div class="about-grid">
+      <div class="about-content">
+        <h2 data-i18n="about.title">О нашей команде</h2>
+        <p data-i18n="about.text1">Мы — не просто разработчики. Мы — те, кто превращает идеи в живые цифровые продукты. Сайты, приложения, чат-боты — для нас это не набор задач, а поле для креатива, инженерии и экспериментов.</p>
+        <p data-i18n="about.text2">Мы строим то, что работает быстро, выглядит стильно и решает конкретные задачи. Каждый наш проект — это вызов. Мы не берем шаблоны, мы создаём.</p>
+        <p data-i18n="about.text3">Работаем чётко: договор, сроки, результат. И, конечно, с душой — ведь каждый проект для нас как новый уровень в игре, который мы обязательно проходим на 100%.</p>
+        <button class="btn" style="margin-top: 20px;" onclick="toggleModal()">
+          <span class="btn-text" data-i18n="hero.order">Оставить заявку</span>
+          <span class="loader"></span>
+        </button>
+      </div>
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Команда разработчиков" loading="lazy">
+      </div>
+    </div>
+  </section>
+  
+  <!-- Портфолио -->
+  <section id="portfolio" class="container">
+    <h2 data-i18n="portfolio.title">Наши работы</h2>
+    
+    <div class="portfolio-filters">
+      <button class="filter-btn active" data-filter="all" data-i18n="portfolio.all">Все проекты</button>
+      <button class="filter-btn" data-filter="website" data-i18n="portfolio.website">Сайты</button>
+      <button class="filter-btn" data-filter="app" data-i18n="portfolio.app">Приложения</button>
+      <button class="filter-btn" data-filter="bot" data-i18n="portfolio.bot">Чат-боты</button>
+    </div>
+    
+    <div class="portfolio-grid">
+      <div class="portfolio-item" data-category="website">
+        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="Сайт ресторана" loading="lazy">
+        <div class="portfolio-overlay">
+          <h3 data-i18n="portfolio.item1">Сайт ресторана</h3>
+          <p data-i18n="portfolio.item1_text">Адаптивный дизайн, онлайн-бронирование, система управления меню</p>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="bot">
+        <img src="https://images.unsplash.com/photo-1611606063065-ee7946f0787a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80" alt="Telegram бот" loading="lazy">
+        <div class="portfolio-overlay">
+          <h3 data-i18n="portfolio.item2">Бот для доставки</h3>
+          <p data-i18n="portfolio.item2_text">Автоматизация заказов, интеграция с CRM, платежная система</p>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="app">
+        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1100&q=80" alt="Мобильное приложение" loading="lazy">
+        <div class="portfolio-overlay">
+          <h3 data-i18n="portfolio.item3">Приложение для фитнеса</h3>
+          <p data-i18n="portfolio.item3_text">iOS/Android, синхронизация с трекерами, планировщик тренировок</p>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="website">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1115&q=80" alt="Корпоративный сайт" loading="lazy">
+        <div class="portfolio-overlay">
+          <h3 data-i18n="portfolio.item4">Корпоративный портал</h3>
+          <p data-i18n="portfolio.item4_text">Система управления контентом, многоязычная поддержка</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Отзывы -->
+  <section id="testimonials" class="container">
+    <h2 data-i18n="testimonials.title">Отзывы клиентов</h2>
+    
+    <div class="testimonials-slider">
+      <div class="testimonials-track">
+        <div class="testimonial-card">
+          <i data-lucide="quote"></i>
+          <p data-i18n="testimonial1">"Заказал лендинг для стартапа. Сделали быстро, учли все правки. Сайт привёл первых клиентов уже через неделю! Особенно впечатлило внимание к деталям и креативный подход команды."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">А</div>
+            <div>
+              <p style="font-weight: 600; margin-bottom: 5px;" data-i18n="testimonial1_author">Айбек Рустамович</p>
+              <p style="color: var(--text-secondary); font-size: 0.9rem;" data-i18n="testimonial1_position">Основатель стартапа</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <i data-lucide="quote"></i>
+          <p data-i18n="testimonial2">"Telegram-бот для нашего магазина увеличил продажи на 30%. Очень доволен качеством и поддержкой. Команда оперативно реагирует на запросы и предлагает интересные решения для развития проекта."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">А</div>
+            <div>
+              <p style="font-weight: 600; margin-bottom: 5px;" data-i18n="testimonial2_author">Алия Аманова</p>
+              <p style="color: var(--text-secondary); font-size: 0.9rem;" data-i18n="testimonial2_position">Владелец магазина</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <i data-lucide="quote"></i>
+          <p data-i18n="testimonial3">"Приложение для нашего фитнес-центра превзошло ожидания. Клиенты теперь бронируют тренировки за минуты! Отличный UX/UI дизайн и стабильная работа даже при большой нагрузке."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">М</div>
+            <div>
+              <p style="font-weight: 600; margin-bottom: 5px;" data-i18n="testimonial3_author">Максим Алексеевич</p>
+              <p style="color: var(--text-secondary); font-size: 0.9rem;" data-i18n="testimonial3_position">Управляющий фитнес-центром</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="slider-nav">
+        <div class="slider-dot active" data-slide="0"></div>
+        <div class="slider-dot" data-slide="1"></div>
+        <div class="slider-dot" data-slide="2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Этапы -->
+  <section id="steps" class="container">
+    <h2 data-i18n="steps.title">Как мы работаем?</h2>
+    
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-number" data-count="1">0</div>
+        <div class="timeline-content">
+          <h3 data-i18n="step1">Анализ и планирование</h3>
+          <p data-i18n="step1_text">Разбираемся в вашей задаче, целевой аудитории и целях. Думаем вместе, предлагаем лучшее решение.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-number" data-count="2">0</div>
+        <div class="timeline-content">
+          <h3 data-i18n="step2">Дизайн и прототипирование</h3>
+          <p data-i18n="step2_text">Создаём структуру, рисуем интерфейсы. Продумываем всё — от первого клика до последнего действия.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-number" data-count="3">0</div>
+        <div class="timeline-content">
+          <h3 data-i18n="step3">Разработка</h3>
+          <p data-i18n="step3_text">Собираем чистый, быстрый и масштабируемый код. Всё адаптивно, анимировано, стильно и удобно.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-number" data-count="4">0</div>
+        <div class="timeline-content">
+          <h3 data-i18n="step4">Тестирование</h3>
+          <p data-i18n="step4_text">Проверяем каждую деталь — на всех устройствах, браузерах и экранах. Только стабильность и надёжность.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-number" data-count="5">0</div>
+        <div class="timeline-content">
+          <h3 data-i18n="step5">Запуск и поддержка</h3>
+          <p data-i18n="step5_text">Публикуем проект, подключаем аналитику, следим за работой. Всегда рядом: обновим, улучшим, добавим новое.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Тарифы -->
+  <section id="pricing" class="container">
+    <h2 data-i18n="pricing.title">Наши тарифы</h2>
+    
+    <div class="pricing-table">
+      <div class="price-card">
+        <h3 data-i18n="pricing.website">Сайт</h3>
+        <div class="price-amount"><span data-i18n="pricing.from">от</span> <span class="animate-number" data-count="15000">0</span>с</div>
+        <ul class="price-features">
+          <li data-i18n="pricing.site_item1">Лендинг, визитка, корпоративный сайт</li>
+          <li data-i18n="pricing.site_item2">Адаптивный дизайн</li>
+          <li data-i18n="pricing.site_item3">SEO оптимизация</li>
+          <li data-i18n="pricing.site_item4">Базовая CMS</li>
+          <li data-i18n="pricing.site_item5">Техническая поддержка 3 месяца</li>
+        </ul>
+        <button class="btn" onclick="toggleModal()">
+          <span class="btn-text" data-i18n="pricing.order">Заказать</span>
+          <span class="loader"></span>
+        </button>
+      </div>
+      <div class="price-card featured">
+        <h3 data-i18n="pricing.bot">Чат-бот</h3>
+        <div class="price-amount"><span data-i18n="pricing.from">от</span> <span class="animate-number" data-count="7000">0</span>с</div>
+        <ul class="price-features">
+          <li data-i18n="pricing.bot_item1">Telegram, WhatsApp, VK</li>
+          <li data-i18n="pricing.bot_item2">Автоматизация процессов</li>
+          <li data-i18n="pricing.bot_item3">Интеграция с CRM</li>
+          <li data-i18n="pricing.bot_item4">Мультиязычная поддержка</li>
+          <li data-i18n="pricing.bot_item5">Техническая поддержка 6 месяцев</li>
+        </ul>
+        <button class="btn" onclick="toggleModal()">
+          <span class="btn-text" data-i18n="pricing.order">Заказать</span>
+          <span class="loader"></span>
+        </button>
+      </div>
+      <div class="price-card">
+        <h3 data-i18n="pricing.app">Приложения</h3>
+        <div class="price-amount"><span data-i18n="pricing.from">от</span> <span class="animate-number" data-count="40000">0</span>с</div>
+        <ul class="price-features">
+          <li data-i18n="pricing.app_item1">iOS и Android</li>
+          <li data-i18n="pricing.app_item2">Кроссплатформенные решения</li>
+          <li data-i18n="pricing.app_item3">Интеграция с API</li>
+          <li data-i18n="pricing.app_item4">Push-уведомления</li>
+          <li data-i18n="pricing.app_item5">Годовая техническая поддержка</li>
+        </ul>
+        <button class="btn" onclick="toggleModal()">
+          <span class="btn-text" data-i18n="pricing.order">Заказать</span>
+          <span class="loader"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="container">
+    <h2 data-i18n="faq.title">Частые вопросы</h2>
+    
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>
+          <span data-i18n="faq.q1">Сколько стоит разработка?</span>
+          <i data-lucide="chevron-down"></i>
+        </h3>
+        <p data-i18n="faq.a1">Цена зависит от объема работ и сложности проекта.<br>— Лендинг или визитка: от <span class="animate-number" data-count="5000">0</span> до <span class="animate-number" data-count="15000">0</span> сом<br>— Telegram-бот: от <span class="animate-number" data-count="7000">0</span> сом<br>— Многостраничный сайт или WebApp: от <span class="animate-number" data-count="20000">0</span> сом<br>— Мобильное приложение: от <span class="animate-number" data-count="40000">0</span> сом<br>Мы озвучиваем точную цену только после обсуждения задачи. Без скрытых доплат.</p>
+      </div>
+      <div class="faq-item">
+        <h3>
+          <span data-i18n="faq.q2">Сколько времени занимает?</span>
+          <i data-lucide="chevron-down"></i>
+        </h3>
+        <p data-i18n="faq.a2">Срок зависит от проекта:<br>— Простой сайт: <span class="animate-number" data-count="3">0</span>–<span class="animate-number" data-count="5">0</span> дней<br>— Чат-бот: <span class="animate-number" data-count="4">0</span>–<span class="animate-number" data-count="7">0</span> дней<br>— Приложение: <span class="animate-number" data-count="1">0</span>–<span class="animate-number" data-count="3">0</span> недели<br>Мы всегда оговариваем сроки заранее и укладываемся в них.</p>
+      </div>
+      <div class="faq-item">
+        <h3>
+          <span data-i18n="faq.q3">Как проходит оплата?</span>
+          <i data-lucide="chevron-down"></i>
+        </h3>
+        <p data-i18n="faq.a3"><span class="animate-number" data-count="50">0</span>% — предоплата перед началом.<br><span class="animate-number" data-count="50">0</span>% — после сдачи готового проекта.<br>При необходимости можем разбить оплату на этапы.</p>
+      </div>
+      <div class="faq-item">
+        <h3>
+          <span data-i18n="faq.q4">Предоставляете ли вы хостинг?</span>
+          <i data-lucide="chevron-down"></i>
+        </h3>
+        <p data-i18n="faq.a4">Да, мы предоставляем услуги хостинга с ежемесячной оплатой. Также можем помочь с переносом на ваш собственный хостинг. Все наши решения оптимизированы для быстрой работы и безопасности.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Контакты -->
+  <section id="contact" class="container">
+    <h2 data-i18n="contact.title">Связаться с нами</h2>
+    
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <i data-lucide="phone"></i>
+          <div>
+            <h3 data-i18n="contact.phone">Телефон</h3>
+            <p>+996 507 331 603</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <i data-lucide="mail"></i>
+          <div>
+            <h3 data-i18n="contact.email">Email</h3>
+            <p>stackcraftr@gmail.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <h3 data-i18n="contact.address">Адрес</h3>
+            <p data-i18n="contact.address_value">Кыргызстан, Бишкек<br>ул. Леваневского 23A, офис 304</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <i data-lucide="clock"></i>
+          <div>
+            <h3 data-i18n="contact.hours">Часы работы</h3>
+            <p data-i18n="contact.hours_value">Пн-Пт: 9:00 - 18:00<br>Сб-Вс: по договоренности</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="contact-form">
+        <h3 data-i18n="contact.form_title">Отправить сообщение</h3>
+        <form id="contact-form">
+          <input type="text" name="name" placeholder="Ваше имя" data-i18n-placeholder="contact.name_placeholder" required />
+          <input type="email" name="email" placeholder="Ваш Email" data-i18n-placeholder="contact.email_placeholder" required />
+          <textarea name="message" rows="4" placeholder="Опишите ваш проект" data-i18n-placeholder="contact.message_placeholder" required></textarea>
+          <input type="hidden" name="csrf" value="secure_token_12345">
+          <button type="submit" class="btn">
+            <span class="btn-text" data-i18n="contact.send">Отправить</span>
+            <span class="loader"></span>
+          </button>
+          <p id="contact-response" style="margin-top: 10px;"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Волновой разделитель -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="var(--accent)"></path>
+      <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="var(--accent)"></path>
+      <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="var(--accent)"></path>
+    </svg>
+  </div>
+
+  <!-- Подвал -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          Stack<span>Craftr</span>
+        </div>
+        <p data-i18n="footer.slogan">Ваш надежный партнер в мире цифровых решений. Создаем технологии, которые работают на ваш успех.</p>
+        
+        <div class="social-links">
+          <a href="https://t.me/stackcraftr" target="_blank" aria-label="Telegram">
+            <i data-lucide="send"></i>
+          </a>
+          <a href="https://wa.me/996507331603" target="_blank" aria-label="WhatsApp">
+            <i data-lucide="message-circle"></i>
+          </a>
+          <a href="https://instagram.com/stackcraftr" target="_blank" aria-label="Instagram">
+            <i data-lucide="instagram"></i>
+          </a>
+          <a href="https://facebook.com/stackcraftr" target="_blank" aria-label="Facebook">
+            <i data-lucide="facebook"></i>
+          </a>
+        </div>
+        
+        <div class="copyright" data-i18n="footer.copyright">
+          &copy; 2025 StackCraftr. Все права защищены.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="close-modal" onclick="toggleModal()" aria-label="Закрыть">
+        <i data-lucide="x"></i>
+      </button>
+      
+      <h2 style="margin-bottom: 10px;" data-i18n="modal.title">Оставить заявку</h2>
+      <p style="margin-bottom: 15px; font-size: 0.95rem;" data-i18n="modal.subtitle">Заполните форму, и мы свяжемся с вами в течение 15 минут</p>
+      
+      <form class="compact-form" id="tg-form">
+        <input type="text" name="name" placeholder="Ваше имя" data-i18n-placeholder="modal.name_placeholder" required />
+        <input type="tel" name="number" placeholder="Номер телефона" data-i18n-placeholder="modal.phone_placeholder" required />
+        <select name="service" required>
+          <option value="" disabled selected data-i18n="modal.service_placeholder">Выберите услугу</option>
+          <option value="website" data-i18n="modal.website">Разработка сайта</option>
+          <option value="app" data-i18n="modal.app">Мобильное приложение</option>
+          <option value="bot" data-i18n="modal.bot">Чат-бот</option>
+          <option value="other" data-i18n="modal.other">Другое</option>
+        </select>
+        <textarea name="message" rows="3" placeholder="Опишите ваш проект" data-i18n-placeholder="modal.message_placeholder" required></textarea>
+        <input type="hidden" name="csrf" value="secure_token_12345">
+        <button type="submit" class="btn">
+          <span class="btn-text" data-i18n="modal.submit">Отправить заявку</span>
+          <span class="loader"></span>
+        </button>
+        <p id="response" style="color: var(--accent);"></p>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Кнопка "Наверх" -->
+  <button id="scrollTop" aria-label="Наверх">
+    <i data-lucide="arrow-up"></i>
+  </button>
+  
+  <!-- Новый языковой переключатель -->
+  <div class="language-selector">
+    <div class="selected-lang" id="selectedLang">
+      <span>RU</span>
+      <i data-lucide="chevron-down"></i>
+    </div>
+    <ul class="lang-list" id="langList">
+      <li class="lang-option" data-lang="ru">RU</li>
+      <li class="lang-option" data-lang="en">EN</li>
+      <li class="lang-option" data-lang="ky">KG</li>
+    </ul>
+  </div>
+
+  <script>
+    // Инициализация иконок
+    lucide.createIcons();
+    
+    // Создание частиц
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 20; // Уменьшено для производительности
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        const size = Math.random() * 10 + 5;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const delay = Math.random() * 5;
+        const duration = Math.random() * 8 + 4;
+        const speed = Math.random() * 2 + 1;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.setAttribute('data-speed', speed);
+        
+        container.appendChild(particle);
+      }
+    }
+    
+    // Параллакс для частиц (оптимизированный)
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+      const particles = document.querySelectorAll('.particle');
+      const deltaX = e.pageX - lastMouseX;
+      const deltaY = e.pageY - lastMouseY;
+      
+      particles.forEach(particle => {
+        const speed = particle.getAttribute('data-speed');
+        const x = deltaX * speed / 50;
+        const y = deltaY * speed / 50;
+        particle.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      
+      lastMouseX = e.pageX;
+      lastMouseY = e.pageY;
+    });
+    
+    // Анимация при скролле
+    function animateOnScroll() {
+      const elements = document.querySelectorAll('.card, .stat-item, .about-image, .portfolio-item, .timeline-item, .price-card, .faq-item');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      elements.forEach(element => {
+        observer.observe(element);
+      });
+    }
+    
+    // Слайдер отзывов
+    function initTestimonialsSlider() {
+      const track = document.querySelector('.testimonials-track');
+      const dots = document.querySelectorAll('.slider-dot');
+      let currentIndex = 0;
+      let autoSlideInterval;
+      
+      function goToSlide(index) {
+        currentIndex = index;
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentIndex);
+        });
+      }
+      
+      function startAutoSlide() {
+        autoSlideInterval = setInterval(() => {
+          currentIndex = (currentIndex + 1) % dots.length;
+          goToSlide(currentIndex);
+        }, 5000);
+      }
+      
+      function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+      }
+      
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          stopAutoSlide();
+          goToSlide(index);
+          startAutoSlide();
+        });
+      });
+      
+      startAutoSlide();
+    }
+    
+    // Фильтрация портфолио
+    function initPortfolioFilter() {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const portfolioItems = document.querySelectorAll('.portfolio-item');
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          const filter = btn.dataset.filter;
+          
+          portfolioItems.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    }
+    
+    // Анимация счетчиков
+    function initNumberAnimation() {
+      const counters = document.querySelectorAll('.stat-number, .timeline-number, .animate-number');
+      
+      function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      }
+      
+      function animateCounter(counter) {
+        const target = parseInt(counter.dataset.count, 10);
+        const duration = 1800;
+        const startTime = performance.now();
+        
+        function updateCounter(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const current = Math.floor(progress * target);
+          
+          counter.textContent = formatNumber(current);
+          
+          if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+          } else {
+            counter.textContent = formatNumber(target);
+          }
+        }
+        
+        requestAnimationFrame(updateCounter);
+      }
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      counters.forEach(counter => {
+        counter.textContent = "0";
+        observer.observe(counter);
+      });
+    }
+    
+    // Модальное окно
+    function toggleModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.toggle('show');
+      document.body.style.overflow = modal.classList.contains('show') ? 'hidden' : 'auto';
+      
+      if (modal.classList.contains('show')) {
+        lucide.createIcons();
+      }
+    }
+    
+    // Telegram API данные
+    const TOKEN = '8034144814:AAFWcrLgygIxbrdXymwoNiFjEcYSuQhIzR4';
+    const CHAT_ID = '7521102948';
+    
+    // Показать/скрыть индикатор загрузки
+    function showButtonLoader(button) {
+      const btnText = button.querySelector('.btn-text');
+      const loader = button.querySelector('.loader');
+      
+      btnText.style.display = 'none';
+      loader.style.display = 'inline-block';
+      button.disabled = true;
+    }
+    
+    function hideButtonLoader(button) {
+      const btnText = button.querySelector('.btn-text');
+      const loader = button.querySelector('.loader');
+      
+      loader.style.display = 'none';
+      btnText.style.display = 'inline-block';
+      button.disabled = false;
+    }
+    
+    // Валидация формы
+    function validateModalForm(name, number, message) {
+      const nameWords = name.trim().split(/\s+/).filter(word => word.length > 0);
+      if (nameWords.length > 5) return "❌ Имя должно содержать не более 5 слов";
+
+      // Обновленная валидация телефона
+      const phoneRegex = /^(\+996|0|996)?\s?\d{3}\s?\d{3}\s?\d{3}$/;
+      if (!phoneRegex.test(number)) return "❌ Номер телефона должен быть в формате: +996 XXX XXX XXX или 0XXX XXX XXX";
+
+      const messageWords = message.trim().split(/\s+/).filter(word => word.length > 0);
+      if (messageWords.length > 300) return "❌ Сообщение должно содержать не более 300 слов";
+
+      return null;
+    }
+
+    // Обработчик модальной формы
+    document.getElementById('tg-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const button = form.querySelector('button[type="submit"]');
+      showButtonLoader(button);
+      
+      const name = form.name.value;
+      const number = form.number.value;
+      const service = form.service.value;
+      const message = form.message.value;
+      const responseElement = document.getElementById('response');
+
+      const error = validateModalForm(name, number, message);
+      if (error) {
+        responseElement.innerText = error;
+        hideButtonLoader(button);
+        return;
+      }
+
+      const text = `📬 Новая заявка с сайта StackCraftr:\n\nИмя: ${name}\nТелефон: ${number}\nУслуга: ${service}\nСообщение: ${message}`;
+      
+      fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          chat_id: CHAT_ID, 
+          text: text,
+          parse_mode: 'HTML'
+        })
+      }).then(res => res.json()).then(data => {
+        if (data.ok) {
+          responseElement.innerText = '✅ Заявка отправлена! Мы свяжемся с вами в течение 15 минут.';
+          form.reset();
+          
+          setTimeout(() => {
+            responseElement.innerText = '';
+            toggleModal();
+          }, 3000);
+        } else {
+          responseElement.innerText = '❌ Ошибка отправки. Пожалуйста, попробуйте еще раз.';
+        }
+      }).catch(err => {
+        responseElement.innerText = '❌ Ошибка подключения. Проверьте интернет-соединение.';
+      }).finally(() => {
+        hideButtonLoader(button);
+      });
+    });
+
+    // Маска телефона
+    document.querySelector('input[name="number"]').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      
+      // Поддержка форматов: +996 XXX XXX XXX, 0XXX XXX XXX
+      if (value.startsWith('996')) {
+        value = '+' + value;
+      } else if (value.length > 0 && !value.startsWith('+996') && !value.startsWith('0')) {
+        value = '0' + value;
+      }
+      
+      if (value.length > 4) value = value.substring(0, 4) + ' ' + value.substring(4);
+      if (value.length > 8) value = value.substring(0, 8) + ' ' + value.substring(8);
+      if (value.length > 12) value = value.substring(0, 12) + ' ' + value.substring(12, 15);
+      
+      e.target.value = value.substring(0, 16);
+    });
+
+    // Валидация контактной формы
+    function validateContactForm(name, email, message) {
+      const nameWords = name.trim().split(/\s+/).filter(word => word.length > 0);
+      if (nameWords.length > 5) return "❌ Имя должно содержать не более 5 слов";
+
+      if (!email.includes('@') || !email.includes('.')) return "❌ Пожалуйста, введите корректный email";
+
+      const messageWords = message.trim().split(/\s+/).filter(word => word.length > 0);
+      if (messageWords.length > 300) return "❌ Сообщение должно содержать не более 300 слов";
+
+      return null;
+    }
+
+    // Обработчик контактной формы
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const button = form.querySelector('button[type="submit"]');
+      showButtonLoader(button);
+      
+      const name = form.name.value;
+      const email = form.email.value;
+      const message = form.message.value;
+      const responseElement = document.getElementById('contact-response');
+
+      const error = validateContactForm(name, email, message);
+      if (error) {
+        responseElement.innerText = error;
+        hideButtonLoader(button);
+        return;
+      }
+
+      const text = `📬 Новое сообщение с сайта StackCraftr (раздел контакты):\n\nИмя: ${name}\nEmail: ${email}\nСообщение: ${message}`;
+      
+      fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          chat_id: CHAT_ID, 
+          text: text,
+          parse_mode: 'HTML'
+        })
+      }).then(res => res.json()).then(data => {
+        if (data.ok) {
+          responseElement.innerText = '✅ Сообщение отправлено! Мы свяжемся с вами в ближайшее время.';
+          form.reset();
+          
+          setTimeout(() => {
+            responseElement.innerText = '';
+          }, 5000);
+        } else {
+          responseElement.innerText = '❌ Ошибка отправки. Пожалуйста, попробуйте еще раз.';
+        }
+      }).catch(err => {
+        responseElement.innerText = '❌ Ошибка подключения. Проверьте интернет-соединение.';
+      }).finally(() => {
+        hideButtonLoader(button);
+      });
+    });
+
+    // Кнопка "Наверх"
+    const scrollTopBtn = document.getElementById('scrollTop');
+    
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    window.addEventListener('scroll', () => {
+      scrollTopBtn.classList.toggle('show', window.scrollY > 500);
+      
+      const navbar = document.querySelector('.navbar');
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+    
+    // Плавный скролл
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth'
+          });
+          
+          document.querySelector('.menu').classList.remove('show');
+        }
+      });
+    });
+    
+    // Мобильное меню
+    const menuIcon = document.getElementById('menuToggle');
+    menuIcon.addEventListener('click', function() {
+      const menu = document.querySelector('.menu');
+      menu.classList.toggle('show');
+      lucide.createIcons();
+    });
+    
+    // Раскрытие FAQ
+    document.querySelectorAll('.faq-item h3').forEach(item => {
+      item.addEventListener('click', () => {
+        const parent = item.parentElement;
+        parent.classList.toggle('active');
+        lucide.createIcons();
+      });
+    });
+    
+    // Система перевода
+    const i18n = {
+      currentLang: localStorage.getItem('language') || 'ru',
+      
+      translations: {
+        ru: {
+          "nav.benefits": "Преимущества",
+          "nav.portfolio": "Портфолио",
+          "nav.testimonials": "Отзывы",
+          "nav.steps": "Этапы",
+          "nav.pricing": "Тарифы",
+          "nav.faq": "FAQ",
+          "nav.contact": "Контакты",
+          "nav.order": "Заказать",
+          "hero.title": "IT-решения для успешного бизнеса",
+          "hero.subtitle": "Ваш бизнес — наша платформа. Мы создаём сайты, чат-боты и приложения, которые двигают вперёд!",
+          "hero.order": "Оставить заявку",
+          "hero.portfolio": "Портфолио",
+          "benefits.title": "Наши преимущества",
+          "benefits.card1": "Индивидуальный дизайн",
+          "benefits.card1_text": "Каждый проект уникален и создаётся с нуля под ваши требования",
+          "benefits.card2": "Быстрое выполнение",
+          "benefits.card2_text": "Оперативная разработка без потери качества",
+          "benefits.card3": "Адаптивность",
+          "benefits.card3_text": "Идеальное отображение на любых устройствах",
+          "benefits.stats1": "Завершенных проектов",
+          "benefits.stats2": "Довольных клиентов",
+          "benefits.stats3": "Поддержка 24/7",
+          "about.title": "О нашей команде",
+          "about.text1": "Мы — не просто разработчики. Мы — те, кто превращает идеи в живые цифровые продукты. Сайты, приложения, чат-боты — для нас это не набор задач, а поле для креатива, инженерии и экспериментов.",
+          "about.text2": "Мы строим то, что работает быстро, выглядит стильно и решает конкретные задачи. Каждый наш проект — это вызов. Мы не берем шаблоны, мы создаём.",
+          "about.text3": "Работаем чётко: договор, сроки, результат. И, конечно, с душой — ведь каждый проект для нас как новый уровень в игре, который мы обязательно проходим на 100%.",
+          "portfolio.title": "Наши работы",
+          "portfolio.all": "Все проекты",
+          "portfolio.website": "Сайты",
+          "portfolio.app": "Приложения",
+          "portfolio.bot": "Чат-боты",
+          "portfolio.item1": "Сайт ресторана",
+          "portfolio.item1_text": "Адаптивный дизайн, онлайн-бронирование, система управления меню",
+          "portfolio.item2": "Бот для доставки",
+          "portfolio.item2_text": "Автоматизация заказов, интеграция с CRM, платежная система",
+          "portfolio.item3": "Приложение для фитнеса",
+          "portfolio.item3_text": "iOS/Android, синхронизация с трекерами, планировщик тренировок",
+          "portfolio.item4": "Корпоративный портал",
+          "portfolio.item4_text": "Система управления контентом, многоязычная поддержка",
+          "testimonials.title": "Отзывы клиентов",
+          "testimonial1": "\"Заказал лендинг для стартапа. Сделали быстро, учли все правки. Сайт привёл первых клиентов уже через неделю! Особенно впечатлило внимание к деталям и креативный подход команды.\"",
+          "testimonial1_author": "Айбек Рустамович",
+          "testimonial1_position": "Основатель стартапа",
+          "testimonial2": "\"Telegram-бот для нашего магазина увеличил продажи на 30%. Очень доволен качеством и поддержкой. Команда оперативно реагирует на запросы и предлагает интересные решения для развития проекта.\"",
+          "testimonial2_author": "Алия Аманова",
+          "testimonial2_position": "Владелец магазина",
+          "testimonial3": "\"Приложение для нашего фитнес-центра превзошло ожидания. Клиенты теперь бронируют тренировки за минуты! Отличный UX/UI дизайн и стабильная работа даже при большой нагрузке.\"",
+          "testimonial3_author": "Максим Алексеевич",
+          "testimonial3_position": "Управляющий фитнес-центром",
+          "steps.title": "Как мы работаем?",
+          "step1": "Анализ и планирование",
+          "step1_text": "Разбираемся в вашей задаче, целевой аудитории и целях. Думаем вместе, предлагаем лучшее решение.",
+          "step2": "Дизайн и прототипирование",
+          "step2_text": "Создаём структуру, рисуем интерфейсы. Продумываем всё — от первого клика до последнего действия.",
+          "step3": "Разработка",
+          "step3_text": "Собираем чистый, быстрый и масштабируемый код. Всё адаптивно, анимировано, стильно и удобно.",
+          "step4": "Тестирование",
+          "step4_text": "Проверяем каждую деталь — на всех устройствах, браузерах и экранах. Только стабильность и надёжность.",
+          "step5": "Запуск и поддержка",
+          "step5_text": "Публикуем проект, подключаем аналитику, следим за работой. Всегда рядом: обновим, улучшим, добавим новое.",
+          "pricing.title": "Наши тарифы",
+          "pricing.website": "Сайт",
+          "pricing.bot": "Чат-бот",
+          "pricing.app": "Приложения",
+          "pricing.from": "от",
+          "pricing.site_item1": "Лендинг, визитка, корпоративный сайт",
+          "pricing.site_item2": "Адаптивный дизайн",
+          "pricing.site_item3": "SEO оптимизация",
+          "pricing.site_item4": "Базовая CMS",
+          "pricing.site_item5": "Техническая поддержка 3 месяца",
+          "pricing.bot_item1": "Telegram, WhatsApp, VK",
+          "pricing.bot_item2": "Автоматизация процессов",
+          "pricing.bot_item3": "Интеграция с CRM",
+          "pricing.bot_item4": "Мультиязычная поддержка",
+          "pricing.bot_item5": "Техническая поддержка 6 месяцев",
+          "pricing.app_item1": "iOS и Android",
+          "pricing.app_item2": "Кроссплатформенные решения",
+          "pricing.app_item3": "Интеграция с API",
+          "pricing.app_item4": "Push-уведомления",
+          "pricing.app_item5": "Годовая техническая поддержка",
+          "pricing.order": "Заказать",
+          "faq.title": "Частые вопросы",
+          "faq.q1": "Сколько стоит разработка?",
+          "faq.a1": "Цена зависит от объема работ и сложности проекта.<br>— Лендинг или визитка: от 5 000 до 15 000 сом<br>— Telegram-бот: от 7 000 сом<br>— Многостраничный сайт или WebApp: от 20 000 сом<br>— Мобильное приложение: от 40 000 сом<br>Мы озвучиваем точную цену только после обсуждения задачи. Без скрытых доплат.",
+          "faq.q2": "Сколько времени занимает?",
+          "faq.a2": "Срок зависит от проекта:<br>— Простой сайт: 3–5 дней<br>— Чат-бот: 4–7 дней<br>— Приложение: 1–3 недели<br>Мы всегда оговариваем сроки заранее и укладываемся в них.",
+          "faq.q3": "Как проходит оплата?",
+          "faq.a3": "50% — предоплата перед началом.<br>50% — после сдачи готового проекта.<br>При необходимости можем разбить оплату на этапы.",
+          "faq.q4": "Предоставляете ли вы хостинг?",
+          "faq.a4": "Да, мы предоставляем услуги хостинга с ежемесячной оплатой. Также можем помочь с переносом на ваш собственный хостинг. Все наши решения оптимизированы для быстрой работы и безопасности.",
+          "contact.title": "Связаться с нами",
+          "contact.phone": "Телефон",
+          "contact.email": "Email",
+          "contact.address": "Адрес",
+          "contact.hours": "Часы работы",
+          "contact.form_title": "Отправить сообщение",
+          "contact.name_placeholder": "Ваше имя",
+          "contact.email_placeholder": "Ваш Email",
+          "contact.message_placeholder": "Опишите ваш проект",
+          "contact.send": "Отправить",
+          "contact.address_value": "Кыргызстан, Бишкек<br>ул. Леваневского 23A, офис 304",
+          "contact.hours_value": "Пн-Пт: 9:00 - 18:00<br>Сб-Вс: по договоренности",
+          "modal.title": "Оставить заявку",
+          "modal.subtitle": "Заполните форму, и мы свяжемся с вами в течение 15 минут",
+          "modal.name_placeholder": "Ваше имя",
+          "modal.phone_placeholder": "Номер телефона",
+          "modal.service_placeholder": "Выберите услугу",
+          "modal.website": "Разработка сайта",
+          "modal.app": "Мобильное приложение",
+          "modal.bot": "Чат-бот",
+          "modal.other": "Другое",
+          "modal.message_placeholder": "Опишите ваш проект",
+          "modal.submit": "Отправить заявку",
+          "footer.slogan": "Ваш надежный партнер в мире цифровых решений. Создаем технологии, которые работают на ваш успех.",
+          "footer.copyright": "&copy; 2025 StackCraftr. Все права защищены."
+        },
+        en: {
+          "nav.benefits": "Benefits",
+          "nav.portfolio": "Portfolio",
+          "nav.testimonials": "Testimonials",
+          "nav.steps": "Steps",
+          "nav.pricing": "Pricing",
+          "nav.faq": "FAQ",
+          "nav.contact": "Contact",
+          "nav.order": "Order",
+          "hero.title": "IT Solutions for Successful Business",
+          "hero.subtitle": "Your business is our platform. We create websites, chat bots and applications that drive your success!",
+          "hero.order": "Leave a request",
+          "hero.portfolio": "Portfolio",
+          "benefits.title": "Our Advantages",
+          "benefits.card1": "Custom Design",
+          "benefits.card1_text": "Each project is unique and created from scratch according to your requirements",
+          "benefits.card2": "Fast Execution",
+          "benefits.card2_text": "Quick development without compromising quality",
+          "benefits.card3": "Responsive",
+          "benefits.card3_text": "Perfect display on any device",
+          "benefits.stats1": "Completed projects",
+          "benefits.stats2": "Satisfied clients",
+          "benefits.stats3": "24/7 Support",
+          "about.title": "About Our Team",
+          "about.text1": "We are not just developers. We are the ones who turn ideas into live digital products. Websites, applications, chat bots - for us this is not a set of tasks, but a field for creativity, engineering and experiments.",
+          "about.text2": "We build what works fast, looks stylish and solves specific problems. Each of our projects is a challenge. We don't take templates, we create.",
+          "about.text3": "We work clearly: contract, deadlines, result. And, of course, with soul - because each project for us is like a new level in the game that we definitely pass at 100%.",
+          "portfolio.title": "Our Works",
+          "portfolio.all": "All projects",
+          "portfolio.website": "Websites",
+          "portfolio.app": "Applications",
+          "portfolio.bot": "Chat bots",
+          "portfolio.item1": "Restaurant Website",
+          "portfolio.item1_text": "Responsive design, online booking, menu management system",
+          "portfolio.item2": "Delivery Bot",
+          "portfolio.item2_text": "Order automation, CRM integration, payment system",
+          "portfolio.item3": "Fitness App",
+          "portfolio.item3_text": "iOS/Android, synchronization with trackers, workout planner",
+          "portfolio.item4": "Corporate Portal",
+          "portfolio.item4_text": "Content management system, multilingual support",
+          "testimonials.title": "Client Testimonials",
+          "testimonial1": "\"Ordered a landing page for a startup. They did it quickly, took into account all the edits. The site brought the first clients in just a week! I was especially impressed by the attention to detail and the creative approach of the team.\"",
+          "testimonial1_author": "Aibek Rustamovich",
+          "testimonial1_position": "Startup Founder",
+          "testimonial2": "\"The Telegram bot for our store increased sales by 30%. Very pleased with the quality and support. The team responds quickly to requests and offers interesting solutions for project development.\"",
+          "testimonial2_author": "Aliya Amanova",
+          "testimonial2_position": "Store Owner",
+          "testimonial3": "\"The app for our fitness center exceeded expectations. Clients now book workouts in minutes! Excellent UX/UI design and stable operation even under heavy load.\"",
+          "testimonial3_author": "Maxim Alekseevich",
+          "testimonial3_position": "Fitness Center Manager",
+          "steps.title": "How We Work?",
+          "step1": "Analysis and Planning",
+          "step1_text": "We understand your task, target audience and goals. We think together, offer the best solution.",
+          "step2": "Design and Prototyping",
+          "step2_text": "We create structure, draw interfaces. We think through everything - from the first click to the last action.",
+          "step3": "Development",
+          "step3_text": "We assemble clean, fast and scalable code. Everything is responsive, animated, stylish and convenient.",
+          "step4": "Testing",
+          "step4_text": "We check every detail - on all devices, browsers and screens. Only stability and reliability.",
+          "step5": "Launch and Support",
+          "step5_text": "We publish the project, connect analytics, monitor the work. Always nearby: update, improve, add new features.",
+          "pricing.title": "Our Pricing",
+          "pricing.website": "Website",
+          "pricing.bot": "Chat Bot",
+          "pricing.app": "Applications",
+          "pricing.from": "from",
+          "pricing.site_item1": "Landing page, business card, corporate website",
+          "pricing.site_item2": "Responsive design",
+          "pricing.site_item3": "SEO optimization",
+          "pricing.site_item4": "Basic CMS",
+          "pricing.site_item5": "Technical support for 3 months",
+          "pricing.bot_item1": "Telegram, WhatsApp, VK",
+          "pricing.bot_item2": "Process automation",
+          "pricing.bot_item3": "CRM integration",
+          "pricing.bot_item4": "Multilingual support",
+          "pricing.bot_item5": "Technical support for 6 months",
+          "pricing.app_item1": "iOS and Android",
+          "pricing.app_item2": "Cross-platform solutions",
+          "pricing.app_item3": "API integration",
+          "pricing.app_item4": "Push notifications",
+          "pricing.app_item5": "Annual technical support",
+          "pricing.order": "Order",
+          "faq.title": "Frequently Asked Questions",
+          "faq.q1": "How much does development cost?",
+          "faq.a1": "The price depends on the scope of work and the complexity of the project.<br>— Landing page or business card: from 5,000 to 15,000 KGS<br>— Telegram bot: from 7,000 KGS<br>— Multi-page website or WebApp: from 20,000 KGS<br>— Mobile application: from 40,000 KGS<br>We announce the exact price only after discussing the task. No hidden fees.",
+          "faq.q2": "How long does it take?",
+          "faq.a2": "The timeline depends on the project:<br>— Simple website: 3–5 days<br>— Chat bot: 4–7 days<br>— Application: 1–3 weeks<br>We always agree on deadlines in advance and meet them.",
+          "faq.q3": "How is payment made?",
+          "faq.a3": "50% — prepayment before starting.<br>50% — after delivery of the finished project.<br>If necessary, we can split the payment into stages.",
+          "faq.q4": "Do you provide hosting?",
+          "faq.a4": "Yes, we provide hosting services with monthly payment. We can also help with transferring to your own hosting. All our solutions are optimized for fast operation and security.",
+          "contact.title": "Contact Us",
+          "contact.phone": "Phone",
+          "contact.email": "Email",
+          "contact.address": "Address",
+          "contact.hours": "Working Hours",
+          "contact.form_title": "Send a Message",
+          "contact.name_placeholder": "Your Name",
+          "contact.email_placeholder": "Your Email",
+          "contact.message_placeholder": "Describe your project",
+          "contact.send": "Send",
+          "contact.address_value": "Kyrgyzstan, Bishkek<br>Levanovsky St. 23A, office 304",
+          "contact.hours_value": "Mon-Fri: 9:00 AM - 6:00 PM<br>Sat-Sun: by appointment",
+          "modal.title": "Place an Order",
+          "modal.subtitle": "Fill out the form and we will contact you within 15 minutes",
+          "modal.name_placeholder": "Your Name",
+          "modal.phone_placeholder": "Phone Number",
+          "modal.service_placeholder": "Select a service",
+          "modal.website": "Website Development",
+          "modal.app": "Mobile Application",
+          "modal.bot": "Chat Bot",
+          "modal.other": "Other",
+          "modal.message_placeholder": "Describe your project",
+          "modal.submit": "Submit Application",
+          "footer.slogan": "Your reliable partner in the world of digital solutions. We create technologies that work for your success.",
+          "footer.copyright": "&copy; 2025 StackCraftr. All rights reserved."
+        },
+        ky: {
+          "nav.benefits": "Артыкчылыктарыбыз",
+          "nav.portfolio": "Портфолио",
+          "nav.testimonials": "Пикирлер",
+          "nav.steps": "Кадамдар",
+          "nav.pricing": "Баалоо",
+          "nav.faq": "FAQ",
+          "nav.contact": "Байланыш",
+          "nav.order": "Заказ берүү",
+          "hero.title": "Ишкерлер үчүн IT чечимдер",
+          "hero.subtitle": "Сиздин бизнес — биздин платформа. Биз сиздин бизнести алга жылдырган сайттар, чат-боттор жана колдонмолорду түзөбүз!",
+          "hero.order": "Сурамжылоо калтыруу",
+          "hero.portfolio": "Портфолио",
+          "benefits.title": "Биздин артыкчылыктарыбыз",
+          "benefits.card1": "Жеке дизайн",
+          "benefits.card1_text": "Ар бир долбоор өзгөчө жана сиздин талаптарыңызга ылайыкталып түзүлөт",
+          "benefits.card2": "Тез аткаруу",
+          "benefits.card2_text": "Сапаттан айырылбай тез иштеп чыгуу",
+          "benefits.card3": "Адаптивдүүлүк",
+          "benefits.card3_text": "Ар кандай түзмөктөрдө кемчилсиз көрүнүш",
+          "benefits.stats1": "Аякталган долбоорлор",
+          "benefits.stats2": "Канааттанган кардарлар",
+          "benefits.stats3": "24/7 колдоо",
+          "about.title": "Биздин команда жөнүндө",
+          "about.text1": "Биз жөнөкөй программачылар эмеспиз. Биз идеяларды тирүү сандык продукттарга айлантабыз. Сайттар, колдонмолор, чат-боттор — бул биз үчүн жөн гана милдеттер тобу эмес, балким чыгармачылык, инженериялык иштер жана эксперименттер үчүн аянт.",
+          "about.text2": "Биз тез иштеген, стилдүү көрүнгөн жана конкреттүү көйгөйлөрдү чечкен нерселерди курабыз. Ар бир долбоор биз үчүн сыноо. Биз үлгүлөрдү албайбыз, биз түзөбүз.",
+          "about.text3": "Так иштеп жатабыз: келишим, мөөнөттөр, натыйжа. Жана, албетте, жан-дилибиз менен — ар бир долбоор биз үчүн 100% өтүү керек болгон оюндагы жаңы деңгээл сыяктуу.",
+          "portfolio.title": "Биздин иштер",
+          "portfolio.all": "Баардык долбоорлор",
+          "portfolio.website": "Сайттар",
+          "portfolio.app": "Колдонмолор",
+          "portfolio.bot": "Чат-боттор",
+          "portfolio.item1": "Ресторан сайты",
+          "portfolio.item1_text": "Адаптивдүү дизайн, онлайн брондоо, меню башкаруу системасы",
+          "portfolio.item2": "Жеткирүү боту",
+          "portfolio.item2_text": "Заказдарды автоматташтыруу, CRM менен интеграция, төлөм системасы",
+          "portfolio.item3": "Фитнес колдонмосу",
+          "portfolio.item3_text": "iOS/Android, трекерлер менен синхрондоштуруу, тренировкаларды пландоо",
+          "portfolio.item4": "Корпоративдик портал",
+          "portfolio.item4_text": "Контент башкаруу системасы, көп тилдүү колдоо",
+          "testimonials.title": "Кардарлардын пикирлери",
+          "testimonial1": "\"Стартап үчүн лендинг заказ кылдым. Тез жасап беришти, бардык өзгөртүүлөрдү эске алышты. Сайт бир жуманын ичинде эле биринчи кардарларды алып келди! Команданын деталдарга көңүл буруусу жана чыгармачылык мамилеси айрыкча таасир калтырды.\"",
+          "testimonial1_author": "Айбек Рустамович",
+          "testimonial1_position": "Стартап негиздөөчүсү",
+          "testimonial2": "\"Биздин дүкөн үчүн Telegram-бот сатыктарды 30% көбөйттү. Абдан ыраазымын сапатына жана колдоосуна. Команда суроолорго тез жооп берип, долбоорду өнүктүрүү үчүн кызыктуу чечимдерди сунуштады.\"",
+          "testimonial2_author": "Алия Аманова",
+          "testimonial2_position": "Дүкөн ээси",
+          "testimonial3": "\"Биздин фитнес борбору үчүн колдонмо күткөндөн ашып кетти. Кардарлар азыр тренировкаларды мүнөттөр ичинде брондошот! Сонун UX/UI дизайн жана чоң жүктөөдө да туруктуу иштөө.\"",
+          "testimonial3_author": "Максим Алексеевич",
+          "testimonial3_position": "Фитнес борборунун менеджери",
+          "steps.title": "Биз кандай иштеп жатабыз?",
+          "step1": "Анализ жана пландоо",
+          "step1_text": "Сиздин милдетти, максаттуу аудиторияны жана максаттарды түшүнөбүз. Чогуу ойлонуп, эң жакшы чечимди сунуштайбыз.",
+          "step2": "Дизайн жана прототип",
+          "step2_text": "Структура түзөбүз, интерфейстерди тартабыз. Биринчи чыкылдатуудан акыркы аракетке чейин баарын ойлонуп чыгабыз.",
+          "step3": "Иштеп чыгуу",
+          "step3_text": "Таза, тез жана масштабдануучу кодду чогултабыз. Баары адаптивдүү, анимацияланган, стилдүү жана ыңгайлуу.",
+          "step4": "Сыноо",
+          "step4_text": "Ар бир деталды текшеребиз — бардык түзмөктөрдө, браузерлерде жана экрандарда. Тек гана туруктуулук жана ишенимдүүлүк.",
+          "step5": "Жайгаштыруу жана колдоо",
+          "step5_text": "Долбоорду жарыялайбыз, аналитиканы туташтырабыз, ишин көзөмөлдөйбүз. Ар дайым жанында: жаңыртабыз, жакшыртабыз, жаңы нерселерди кошобуз.",
+          "pricing.title": "Баалоо",
+          "pricing.website": "Сайт",
+          "pricing.bot": "Чат-бот",
+          "pricing.app": "Колдонмолор",
+          "pricing.from": "баштап",
+          "pricing.site_item1": "Лендинг, визитка, корпоративдик сайт",
+          "pricing.site_item2": "Адаптивдүү дизайн",
+          "pricing.site_item3": "SEO оптимизация",
+          "pricing.site_item4": "Негизги CMS",
+          "pricing.site_item5": "Техникалык колдоо 3 ай",
+          "pricing.bot_item1": "Telegram, WhatsApp, VK",
+          "pricing.bot_item2": "Процесстерди автоматташтыруу",
+          "pricing.bot_item3": "CRM менен интеграция",
+          "pricing.bot_item4": "Көп тилдүү колдоо",
+          "pricing.bot_item5": "Техникалык колдоо 6 ай",
+          "pricing.app_item1": "iOS жана Android",
+          "pricing.app_item2": "Кроссплатформалык чечимдер",
+          "pricing.app_item3": "API менен интеграция",
+          "pricing.app_item4": "Push-эскертмелер",
+          "pricing.app_item5": "Жылдык техникалык колдоо",
+          "pricing.order": "Заказ берүү",
+          "faq.title": "Көп берилүүчү суроолор",
+          "faq.q1": "Иштеп чыгуу канчага турат?",
+          "faq.a1": "Баа иштин көлөмүнө жана долбоордун татаалдыгына жараша.<br>— Лендинг же визитка: 5 000ден 15 000 сомго чейин<br>— Telegram-бот: 7 000 сомдон баштап<br>— Көп барактуу сайт же WebApp: 20 000 сомдон баштап<br>— Мобилдик колдонмо: 40 000 сомдон баштап<br>Так бааны милдетти талкуулагандан кийин гана айтабыз. Жашыруун толоктор жок.",
+          "faq.q2": "Канча убакыт талап кылат?",
+          "faq.a2": "Мөөнөт долбоорго жараша:<br>— Жөнөкөй сайт: 3–5 күн<br>— Чат-бот: 4–7 күн<br>— Колдонмо: 1–3 жума<br>Биз мөөнөттөрдү алдын ала макулдашып, аларга туура келебиз.",
+          "faq.q3": "Төлөм кандай жүргүзүлөт?",
+          "faq.a3": "50% — баштоодон мурун алдын ала төлөм.<br>50% — даяр долбоорду тапшыргандан кийин.<br>Зарыл болсо, төлөмдү этаптарга бөлүп бере алабыз.",
+          "faq.q4": "Хостинг теминдейсизби?",
+          "faq.a4": "Ооба, биз ай сайын төлөм менен хостинг кызматтарын беребиз. Ошондой эле сиздин өз хостиңизге көчүрүүгө жардам бере алабыз. Бардык чечимдерибиз тез иштөө жана коопсуздук үчүн оптимизацияланган.",
+          "contact.title": "Биз менен байланыш",
+          "contact.phone": "Телефон",
+          "contact.email": "Email",
+          "contact.address": "Дарек",
+          "contact.hours": "Иш сааттары",
+          "contact.form_title": "Билдирүү жөнөтүү",
+          "contact.name_placeholder": "Атыңыз",
+          "contact.email_placeholder": "Сиздин Email",
+          "contact.message_placeholder": "Долбооруңузду сүрөттөңүз",
+          "contact.send": "Жөнөтүү",
+          "contact.address_value": "Кыргызстан, Бишкек<br>Леваневский көч. 23A, 304-офис",
+          "contact.hours_value": "Дүй-жума: 9:00 - 18:00<br>Ишемби-жекшемби: макулдашуу боюнча",
+          "modal.title": "Заказ калтыруу",
+          "modal.subtitle": "Форманы толтуруңуз, 15 мүнөт ичинде сиз менен байланышабыз",
+          "modal.name_placeholder": "Атыңыз",
+          "modal.phone_placeholder": "Телефон номери",
+          "modal.service_placeholder": "Кызмат тандаңыз",
+          "modal.website": "Сайт иштеп чыгуу",
+          "modal.app": "Мобилдик колдонмо",
+          "modal.bot": "Чат-бот",
+          "modal.other": "Башка",
+          "modal.message_placeholder": "Долбооруңузду сүрөттөңүз",
+          "modal.submit": "Сурамжылоо жөнөтүү",
+          "footer.slogan": "Сандык чечимдер дүйнөсүндөгү ишенимдүү шеригиңиз. Сиздин ийгиликтиңиз үчүн иштеген технологияларды түзөбүз.",
+          "footer.copyright": "&copy; 2025 StackCraftr. Бардык укуктар корголгон."
+        }
+      },
+      
+      applyTranslations() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+          const key = element.getAttribute('data-i18n');
+          const translation = this.translations[this.currentLang][key];
+          
+          if (translation) {
+            element.innerHTML = translation;
+          }
+        });
+        
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+          const key = element.getAttribute('data-i18n-placeholder');
+          const translation = this.translations[this.currentLang][key];
+          
+          if (translation) {
+            element.placeholder = translation;
+          }
+        });
+        
+        const langText = {
+          ru: 'RU',
+          en: 'EN',
+          ky: 'KG'
+        }[this.currentLang];
+        document.querySelector('.selected-lang span').textContent = langText;
+      },
+      
+      init() {
+        this.applyTranslations();
+      }
+    };
+    
+    // Языковой переключатель
+    function toggleLangList() {
+      document.getElementById('langList').classList.toggle('show');
+    }
+
+    document.getElementById('selectedLang').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleLangList();
+    });
+
+    document.querySelectorAll('.lang-option').forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const lang = this.dataset.lang;
+        i18n.currentLang = lang;
+        i18n.applyTranslations();
+        lucide.createIcons();
+        localStorage.setItem('language', lang);
+        closeLangList();
+      });
+    });
+
+    function closeLangList() {
+      document.getElementById('langList').classList.remove('show');
+    }
+
+    document.addEventListener('click', closeLangList);
+
+    // Инициализация при загрузке
+    window.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      animateOnScroll();
+      initTestimonialsSlider();
+      initPortfolioFilter();
+      initNumberAnimation();
+      i18n.init();
+    });
+  </script>
+</body>
+</html>
